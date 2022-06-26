@@ -36,7 +36,6 @@ describe("Token contract", function () {
     describe("Transactions", function () {
 
         it("Should transfer tokens between accounts", async function () {
-            // Transfer 50 tokens from owner to addr1
             await contract.safeTransferFrom(ownerAddress, addr1Address, 1, 50, randomBytes(10))
             const addr1Balance = await contract.balanceOf(addr1.address, 1);
             expect(addr1Balance).to.equal(50);
@@ -44,41 +43,10 @@ describe("Token contract", function () {
             expect(balances[0]).to.equal(50);
         });
 
-        // it("Should fail if sender doesn’t have enough tokens", async function () {
-        //     const initialOwnerBalance = await contract.balanceOf(owner.address);
-        //
-        //     // Try to send 1 token from addr1 (0 tokens) to owner (1000000 tokens).
-        //     // `require` will evaluate false and revert the transaction.
-        //     await expect(
-        //         contract.connect(addr1).transfer(owner.address, 1)
-        //     ).to.be.revertedWith("Not enough tokens");
-        //
-        //     // Owner balance shouldn't have changed.
-        //     expect(await contract.balanceOf(owner.address)).to.equal(
-        //         initialOwnerBalance
-        //     );
-        // });
-        //
-        // it("Should update balances after transfers", async function () {
-        //     const initialOwnerBalance = await contract.balanceOf(owner.address);
-        //
-        //     // Transfer 100 tokens from owner to addr1.
-        //     await contract.transfer(addr1.address, 100);
-        //
-        //     // Transfer another 50 tokens from owner to addr2.
-        //     await contract.transfer(addr2.address, 50);
-        //
-        //     // Check balances.
-        //     const finalOwnerBalance = await contract.balanceOf(owner.address);
-        //     expect(finalOwnerBalance).to.equal(initialOwnerBalance.sub(150));
-        //
-        //     const addr1Balance = await contract.balanceOf(addr1.address);
-        //     expect(addr1Balance).to.equal(100);
-        //
-        //     const addr2Balance = await contract.balanceOf(addr2.address);
-        //     expect(addr2Balance).to.equal(50);
-        // });
-
-
+        it("Should set approval", async function () {
+            await contract.setApprovalForAll(addr1Address, true);
+            const isApproved = await  contract.isApprovedForAll(ownerAddress, addr1Address);
+            expect(isApproved).to.equal(true);
+        });
     });
 });
